@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1.0.42"
+clap = { git = "https://github.com/clap-rs/clap.git" }
 dirs = "3.0.2"
 rusqlite = { version = "0.25.3", features = ["bundled-full"] }
-structopt = "0.3.22"
 walkdir = "2.3.2"

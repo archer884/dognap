@@ -7,21 +7,21 @@ use std::{
     path::PathBuf,
 };
 
+use clap::Clap;
 use rusqlite::{params_from_iter, Connection};
-use structopt::StructOpt;
 
 static COOKIE_FILE_HEADER: &str = "# Netscape HTTP Cookie File
 # http://curl.haxx.se/rfc/cookie_spec.html
 # This is a generated file!  Do not edit.
 # ALL SPACES MUST BE TABS! - IT WILL THROW AN ERROR!";
 
-#[derive(Clone, Debug, StructOpt)]
+#[derive(Clap, Clone, Debug)]
 struct Opts {
     /// grab cookies for these hosts
     hosts: Vec<String>,
 
     /// save output to file
-    #[structopt(short, long)]
+    #[clap(short, long)]
     output: Option<String>,
 }
 
@@ -53,7 +53,7 @@ impl Display for MozCookieFmt<'_> {
 }
 
 fn main() {
-    let opts = Opts::from_args();
+    let opts = Opts::parse();
     if let Err(e) = run(&opts) {
         eprintln!("{}", e);
         std::process::exit(1);
