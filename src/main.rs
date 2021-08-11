@@ -4,7 +4,7 @@ use std::{
     fmt::Display,
     fs::File,
     io::{self, Write},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use clap::Clap;
@@ -65,7 +65,7 @@ fn run(opts: &Opts) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let db_path = get_db_path().ok_or(io::Error::new(
+    let db_path = get_db_path().ok_or_else(|| io::Error::new(
         io::ErrorKind::NotFound,
         "cookie db not found",
     ))?;
@@ -74,9 +74,9 @@ fn run(opts: &Opts) -> anyhow::Result<()> {
 
     let hosts_formatter = build_formatter(opts.hosts.len());
     let query = format!(
-        "select name, value, host, path, expiry
-from moz_cookies
-where host in ({})",
+        "select name, value, host, path, expiry \
+        from moz_cookies \
+        where host in ({})",
         hosts_formatter
     );
 
@@ -141,16 +141,27 @@ fn build_formatter(len: usize) -> Cow<'static, str> {
     }
 }
 
-// FIXME: this implementation is probably OS-dependent.
 fn get_db_path() -> Option<PathBuf> {
-    let target = Some(OsStr::new("cookies.sqlite"));
+    let target = OsStr::new("cookies.sqlite");
     let path = dirs::data_dir()?.join("Mozilla\\Firefox\\Profiles");
+    match search(&path, target) {
+        // On Linux, Firefox eschews standard config locations.
+        None => {
+            let path = dirs::home_dir()?.join(".mozilla/firefox");
+            search(&path, target)
+        }
+        path => path,
+    }
+}
+
+fn search(path: impl AsRef<Path>, target: &OsStr) -> Option<PathBuf> {
+    let path = path.as_ref();
     let mut walker = walkdir::WalkDir::new(path)
         .contents_first(true)
         .into_iter()
         .filter_map(|entry| {
             let path = entry.ok()?.into_path();
-            if path.file_name() == target {
+            if path.file_name() == Some(target) {
                 Some(path)
             } else {
                 None
