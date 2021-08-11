@@ -88,7 +88,7 @@ dependencies = [
 [[package]]
 name = "clap"
 version = "3.0.0-beta.2"
-source = "git+https://github.com/clap-rs/clap.git#8b6034e668de0933ab0f88ad14a60a8f1d79a172"
+source = "git+https://github.com/clap-rs/clap.git#69d75949dfe0c0e7e497ca7f167e86a98758ebd8"
 dependencies = [
  "atty",
  "bitflags",
@@ -105,7 +105,7 @@ dependencies = [
 [[package]]
 name = "clap_derive"
 version = "3.0.0-beta.2"
-source = "git+https://github.com/clap-rs/clap.git#8b6034e668de0933ab0f88ad14a60a8f1d79a172"
+source = "git+https://github.com/clap-rs/clap.git#69d75949dfe0c0e7e497ca7f167e86a98758ebd8"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -271,9 +271,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.98"
+version = "0.2.99"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "320cfe77175da3a483efed4bc0adc1968ca050b098ce4f2f1c13a56626128790"
+checksum = "a7f823d141fe0a24df1e23b4af4e3c7ba9e5966ec514ea068c93024aa7deb765"
 
 [[package]]
 name = "libsqlite3-sys"
@@ -385,9 +385,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.2.9"
+version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ab49abadf3f9e1c4bc499e8845e152ad87d2ad2d30371841171169e9d75feee"
+checksum = "8383f39639269cde97d255a32bdb68c047337295414940c68bdd30c2e13203ff"
 dependencies = [
  "bitflags",
 ]
