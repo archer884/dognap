@@ -1,6 +1,6 @@
 # dognap
 
-Generates a Netscrape formatt cookies.txt file based on the contents of a Firefox cookies.sqlite file.
+Generates a Netscrape formatt cookies.txt file based on the contents of a Firefox cookies.sqlite file. Pass to `youtube-dl` via the parameter `--cookies`.
 
 ```shell
 ❯ dognap --help

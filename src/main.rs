@@ -65,10 +65,8 @@ fn run(opts: &Opts) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let db_path = get_db_path().ok_or_else(|| io::Error::new(
-        io::ErrorKind::NotFound,
-        "cookie db not found",
-    ))?;
+    let db_path = get_db_path()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, "cookie db not found"))?;
 
     let connection = Connection::open(&db_path)?;
 
@@ -80,9 +78,10 @@ fn run(opts: &Opts) -> anyhow::Result<()> {
         hosts_formatter
     );
 
+    let hosts: Vec<_> = opts.hosts.iter().map(|host| derive_host(host)).collect();
     let mut s = connection.prepare(&query)?;
     let cookies: Result<Vec<_>, _> = s
-        .query_map(params_from_iter(&opts.hosts), |row| {
+        .query_map(params_from_iter(&hosts), |row| {
             Ok(MozCookie {
                 host: row.get("host")?,
                 path: row.get("path")?,
@@ -168,4 +167,49 @@ fn search(path: impl AsRef<Path>, target: &OsStr) -> Option<PathBuf> {
             }
         });
     walker.next()
+}
+
+fn derive_host(host: &str) -> Cow<'_, str> {
+    let host = host
+        .trim_start_matches("https://")
+        .trim_start_matches("http://");
+
+    let host = host.trim_start_matches("www");
+    if !host.starts_with('.') {
+        let host = String::from(".") + host;
+        Cow::Owned(host)
+    } else {
+        Cow::Borrowed(host)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    struct Gwt {
+        given: &'static str,
+        expected: &'static str,
+    }
+
+    static CASES: &[Gwt] = &[
+        Gwt {
+            given: "http://www.foo.com",
+            expected: ".foo.com",
+        },
+        Gwt {
+            given: "https://www.foo.com",
+            expected: ".foo.com",
+        },
+        Gwt {
+            given: "foo.com",
+            expected: ".foo.com",
+        },
+    ];
+
+    #[test]
+    fn can_build_host() {
+        for case in CASES {
+            let host = super::derive_host(&case.given);
+            assert_eq!(host, case.expected);
+        }
+    }
 }
