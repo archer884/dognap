@@ -1,13 +1,13 @@
 [package]
 name = "dognap"
-version = "0.1.0"
-edition = "2018"
+version = "0.1.1"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.42"
+anyhow = "1.0.44"
 clap = { git = "https://github.com/clap-rs/clap.git" }
-dirs = "3.0.2"
-rusqlite = { version = "0.25.3", features = ["bundled-full"] }
+dirs = "4.0.0"
+rusqlite = { version = "0.26.1", features = ["bundled-full"] }
 walkdir = "2.3.2"
