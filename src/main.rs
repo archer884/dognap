@@ -7,7 +7,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use clap::Clap;
+use clap::Parser;
 use rusqlite::{params_from_iter, Connection};
 
 static COOKIE_FILE_HEADER: &str = "# Netscape HTTP Cookie File
@@ -15,7 +15,7 @@ static COOKIE_FILE_HEADER: &str = "# Netscape HTTP Cookie File
 # This is a generated file!  Do not edit.
 # ALL SPACES MUST BE TABS! - IT WILL THROW AN ERROR!";
 
-#[derive(Clap, Clone, Debug)]
+#[derive(Clone, Debug, Parser)]
 struct Opts {
     /// grab cookies for these hosts
     hosts: Vec<String>,
